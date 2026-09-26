@@ -28,7 +28,7 @@ jobs:
           TARGET_URL: ${{ secrets.KEEPALIVE_URL || vars.KEEPALIVE_URL }}
         run: |
           if [ -z "$TARGET_URL" ]; then
-            echo "Error: KEEPALIVE_URL secret/variable is not configured."
-            exit 1
+            echo "::notice ::KEEPALIVE_URL secret or variable is not configured. Skipping keep-alive ping."
+            exit 0
           fi
           npx service-keepalive "$TARGET_URL" --timeout 30s --retries 3 --once
