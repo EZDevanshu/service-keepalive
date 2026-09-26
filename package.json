@@ -1,0 +1,83 @@
+{
+  "name": "service-keepalive",
+  "version": "1.0.0",
+  "description": "Lightweight, external HTTP keep-alive utility to prevent idle service spin-down on platforms with inbound-traffic wakeups.",
+  "author": "Devanshu Parmar <devanshuparmar00@gmail.com> (https://github.com/EZDevanshu)",
+  "license": "MIT",
+  "homepage": "https://github.com/EZDevanshu/service-keepalive#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EZDevanshu/service-keepalive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EZDevanshu/service-keepalive/issues"
+  },
+  "keywords": [
+    "keepalive",
+    "ping",
+    "uptime",
+    "health-check",
+    "http-ping",
+    "free-tier",
+    "idle-prevention",
+    "heartbeat",
+    "cron",
+    "render",
+    "flyio",
+    "railway",
+    "koyeb",
+    "monitoring"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "service-keepalive": "./dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf dist coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"examples/**/*.ts\" \"*.json\" \"*.md\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"examples/**/*.ts\" \"*.json\" \"*.md\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepack": "npm run clean && npm run build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^22.13.4",
+    "eslint": "^9.20.1",
+    "prettier": "^3.5.1",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.5"
+  }
+}

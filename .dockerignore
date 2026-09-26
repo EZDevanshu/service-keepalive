@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+tests
+examples
+.git
+.github
+*.md
+.prettierrc.json
+.prettierignore
+eslint.config.js
+vitest.config.ts

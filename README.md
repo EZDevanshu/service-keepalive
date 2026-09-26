@@ -3,7 +3,7 @@
 > Production-ready, lightweight HTTP keep-alive utility and CLI to prevent idle service spin-down on cloud platforms where inbound traffic maintains active status.
 
 [![npm version](https://img.shields.io/npm/v/service-keepalive.svg?style=flat-square)](https://www.npmjs.com/package/service-keepalive)
-[![CI](https://github.com/YOUR_GITHUB_USERNAME/service-keepalive/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/service-keepalive/actions/workflows/ci.yml)
+[![CI](https://github.com/EZDevanshu/service-keepalive/actions/workflows/ci.yml/badge.svg)](https://github.com/EZDevanshu/service-keepalive/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/node/v/service-keepalive.svg?style=flat-square)](https://nodejs.org)
 
@@ -48,6 +48,7 @@ Many cloud hosting platforms (such as **Render**, **Fly.io**, **Railway**, or **
 ## Hosting Provider Policy & Terms of Service
 
 > [!WARNING]
+>
 > - **Compliance**: Always check your hosting provider’s **Terms of Service (ToS)**, Acceptable Use Policy, and free-tier limits before setting up keep-alive pings.
 > - **Free Tier Quotas**: Free-tier plans often have a monthly quota of active instance hours (e.g., Render provides 750 free instance hours per month shared across all your free web services). Keeping a service active 24/7 consumes 720–744 hours per month, which may deplete your free tier allowance for other services.
 > - **No Guarantees**: This package does **not** bypass provider-level billing or platform restrictions, nor does it guarantee 100% uptime. Platforms can modify their sleep policies at any time.
@@ -72,17 +73,20 @@ Many cloud hosting platforms (such as **Render**, **Fly.io**, **Railway**, or **
 ## Installation
 
 ### Run directly without installation (CLI)
+
 ```bash
 npx service-keepalive --url https://example.onrender.com/health --interval 10m
 ```
 
 ### Install globally (CLI)
+
 ```bash
 npm install -g service-keepalive
 service-keepalive --url https://example.onrender.com/health
 ```
 
 ### Install as project dependency (Library API)
+
 ```bash
 npm install service-keepalive
 ```
@@ -92,27 +96,28 @@ npm install service-keepalive
 ## CLI Usage
 
 ### Basic Command
+
 ```bash
 service-keepalive --url https://example.onrender.com/health --interval 10m
 ```
 
 ### CLI Flags & Options
 
-| Option | Shorthand | Description | Default |
-| :--- | :--- | :--- | :--- |
-| `--url <url>` | `-u` | Target endpoint URL to ping | *Required* |
-| `--interval <duration>` | `-i` | Interval between pings (`10s`, `5m`, `10m`, `1h`) | `10m` |
-| `--timeout <duration>` | `-t` | Request timeout before aborting (`10s`, `30s`) | `30s` |
-| `--method <method>` | `-m` | HTTP method (`GET`, `POST`, `HEAD`, etc.) | `GET` |
-| `--retries <number>` | `-r` | Number of retry attempts on failure | `3` |
-| `--retry-delay <duration>`| | Base delay before retrying failed requests | `5s` |
-| `--header <key:value>` | `-H` | Custom header (can be specified multiple times) | |
-| `--config <path>` | `-c` | Path to JSON or JS configuration file | `keepalive.config.json` |
-| `--once` | | Execute a single ping cycle and exit (for Cron/CI) | `false` |
-| `--quiet` | `-q` | Suppress routine logs; only output errors | `false` |
-| `--verbose` | `-v` | Enable detailed debug logs and response headers | `false` |
-| `--help` | `-h` | Display help screen | |
-| `--version` | `-V` | Output package version | |
+| Option                     | Shorthand | Description                                        | Default                 |
+| :------------------------- | :-------- | :------------------------------------------------- | :---------------------- |
+| `--url <url>`              | `-u`      | Target endpoint URL to ping                        | _Required_              |
+| `--interval <duration>`    | `-i`      | Interval between pings (`10s`, `5m`, `10m`, `1h`)  | `10m`                   |
+| `--timeout <duration>`     | `-t`      | Request timeout before aborting (`10s`, `30s`)     | `30s`                   |
+| `--method <method>`        | `-m`      | HTTP method (`GET`, `POST`, `HEAD`, etc.)          | `GET`                   |
+| `--retries <number>`       | `-r`      | Number of retry attempts on failure                | `3`                     |
+| `--retry-delay <duration>` |           | Base delay before retrying failed requests         | `5s`                    |
+| `--header <key:value>`     | `-H`      | Custom header (can be specified multiple times)    |                         |
+| `--config <path>`          | `-c`      | Path to JSON or JS configuration file              | `keepalive.config.json` |
+| `--once`                   |           | Execute a single ping cycle and exit (for Cron/CI) | `false`                 |
+| `--quiet`                  | `-q`      | Suppress routine logs; only output errors          | `false`                 |
+| `--verbose`                | `-v`      | Enable detailed debug logs and response headers    | `false`                 |
+| `--help`                   | `-h`      | Display help screen                                |                         |
+| `--version`                | `-V`      | Output package version                             |                         |
 
 ### CLI Examples
 
@@ -142,7 +147,7 @@ import { KeepAlive, PingResult } from 'service-keepalive';
 const keepAlive = new KeepAlive({
   url: 'https://example.onrender.com/health',
   interval: '10m', // Ping every 10 minutes
-  timeout: '30s',  // 30s timeout per request
+  timeout: '30s', // 30s timeout per request
   method: 'GET',
   retries: 3,
   retryDelay: '5s',
@@ -152,11 +157,15 @@ const keepAlive = new KeepAlive({
 });
 
 // Listen to lifecycle and telemetry events
-keepAlive.on('start', (name) => console.log(`Started keepalive for ${name}`));
+keepAlive.on('start', name => console.log(`Started keepalive for ${name}`));
 keepAlive.on('ping', ({ url, attempt }) => console.log(`Pinging ${url} (Attempt ${attempt})`));
-keepAlive.on('success', (result: PingResult) => console.log(`✓ ${result.status} in ${result.durationMs}ms`));
+keepAlive.on('success', (result: PingResult) =>
+  console.log(`✓ ${result.status} in ${result.durationMs}ms`),
+);
 keepAlive.on('failure', (result: PingResult) => console.error(`✗ Failed: ${result.error}`));
-keepAlive.on('retry', (info) => console.warn(`↻ Retrying in ${info.delayMs}ms due to: ${info.error}`));
+keepAlive.on('retry', info =>
+  console.warn(`↻ Retrying in ${info.delayMs}ms due to: ${info.error}`),
+);
 
 // Explicitly start the keep-alive scheduler
 keepAlive.start();
@@ -271,6 +280,7 @@ You can store your settings in a configuration file (`keepalive.config.json` or 
 ```
 
 Run with:
+
 ```bash
 npx service-keepalive
 # Or with explicit config path:
@@ -283,18 +293,18 @@ npx service-keepalive --config ./path/to/keepalive.config.json
 
 All primary settings can be configured via environment variables:
 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `KEEPALIVE_URL` | Target service URL | `https://example.onrender.com/health` |
-| `KEEPALIVE_INTERVAL` | Ping interval | `10m` |
-| `KEEPALIVE_TIMEOUT` | Request timeout | `30s` |
-| `KEEPALIVE_METHOD` | HTTP method | `GET` |
-| `KEEPALIVE_RETRIES` | Max retries | `3` |
-| `KEEPALIVE_RETRY_DELAY`| Base retry delay | `5s` |
-| `KEEPALIVE_HEADERS` | Headers (JSON or comma-separated pairs) | `{"Authorization":"Bearer ..."}` |
-| `KEEPALIVE_CONFIG` | Path to configuration file | `./keepalive.config.json` |
-| `KEEPALIVE_QUIET` | Suppress routine logs | `true` |
-| `KEEPALIVE_VERBOSE` | Enable debug logs | `true` |
+| Variable                | Description                             | Example                               |
+| :---------------------- | :-------------------------------------- | :------------------------------------ |
+| `KEEPALIVE_URL`         | Target service URL                      | `https://example.onrender.com/health` |
+| `KEEPALIVE_INTERVAL`    | Ping interval                           | `10m`                                 |
+| `KEEPALIVE_TIMEOUT`     | Request timeout                         | `30s`                                 |
+| `KEEPALIVE_METHOD`      | HTTP method                             | `GET`                                 |
+| `KEEPALIVE_RETRIES`     | Max retries                             | `3`                                   |
+| `KEEPALIVE_RETRY_DELAY` | Base retry delay                        | `5s`                                  |
+| `KEEPALIVE_HEADERS`     | Headers (JSON or comma-separated pairs) | `{"Authorization":"Bearer ..."}`      |
+| `KEEPALIVE_CONFIG`      | Path to configuration file              | `./keepalive.config.json`             |
+| `KEEPALIVE_QUIET`       | Suppress routine logs                   | `true`                                |
+| `KEEPALIVE_VERBOSE`     | Enable debug logs                       | `true`                                |
 
 ---
 
@@ -340,11 +350,13 @@ jobs:
 A lightweight Dockerfile is included for running `service-keepalive` as a background container on your VPS, server, or Raspberry Pi.
 
 ### Build the image
+
 ```bash
 docker build -t service-keepalive .
 ```
 
 ### Run the container
+
 ```bash
 docker run -d \
   --name keepalive \
@@ -358,38 +370,41 @@ docker run -d \
 
 ## Configuration Reference
 
-| Property | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `url` | `string` | *Required* | Target URL to ping (http or https) |
-| `name` | `string` | URL hostname | Friendly identifier for logs and events |
-| `interval` | `string \| number` | `'10m'` | Interval between consecutive pings (`10s`, `5m`, `1h`, ms) |
-| `timeout` | `string \| number` | `'30s'` | Request timeout duration before aborting |
-| `method` | `string` | `'GET'` | HTTP request method (`GET`, `POST`, `HEAD`, etc.) |
-| `headers` | `Record<string, string>` | `{}` | Custom request headers |
-| `body` | `string \| null` | `null` | Optional request body for POST/PUT requests |
-| `retries` | `number` | `3` | Max retry attempts upon failure |
-| `retryDelay` | `string \| number` | `'5s'` | Initial base delay before retrying |
-| `retryStrategy`| `'exponential' \| 'linear' \| 'fixed'` | `'exponential'` | Delay calculation algorithm |
-| `retryJitter` | `boolean` | `true` | Applies ±20% randomization to prevent request collisions |
-| `maxRetryDelay`| `string \| number` | `'60s'` | Maximum upper boundary for retry delays |
-| `expectedStatusCodes` | `number[] \| Function` | `200..299` | Status codes considered successful |
-| `logLevel` | `'quiet' \| 'normal' \| 'verbose'` | `'normal'` | Terminal logging verbosity |
-| `logger` | `LoggerInterface \| false` | Built-in | Custom logger instance or `false` to disable |
-| `unrefTimer` | `boolean` | `false` | Whether timers allow Node event loop to exit |
+| Property              | Type                                   | Default         | Description                                                |
+| :-------------------- | :------------------------------------- | :-------------- | :--------------------------------------------------------- |
+| `url`                 | `string`                               | _Required_      | Target URL to ping (http or https)                         |
+| `name`                | `string`                               | URL hostname    | Friendly identifier for logs and events                    |
+| `interval`            | `string \| number`                     | `'10m'`         | Interval between consecutive pings (`10s`, `5m`, `1h`, ms) |
+| `timeout`             | `string \| number`                     | `'30s'`         | Request timeout duration before aborting                   |
+| `method`              | `string`                               | `'GET'`         | HTTP request method (`GET`, `POST`, `HEAD`, etc.)          |
+| `headers`             | `Record<string, string>`               | `{}`            | Custom request headers                                     |
+| `body`                | `string \| null`                       | `null`          | Optional request body for POST/PUT requests                |
+| `retries`             | `number`                               | `3`             | Max retry attempts upon failure                            |
+| `retryDelay`          | `string \| number`                     | `'5s'`          | Initial base delay before retrying                         |
+| `retryStrategy`       | `'exponential' \| 'linear' \| 'fixed'` | `'exponential'` | Delay calculation algorithm                                |
+| `retryJitter`         | `boolean`                              | `true`          | Applies ±20% randomization to prevent request collisions   |
+| `maxRetryDelay`       | `string \| number`                     | `'60s'`         | Maximum upper boundary for retry delays                    |
+| `expectedStatusCodes` | `number[] \| Function`                 | `200..299`      | Status codes considered successful                         |
+| `logLevel`            | `'quiet' \| 'normal' \| 'verbose'`     | `'normal'`      | Terminal logging verbosity                                 |
+| `logger`              | `LoggerInterface \| false`             | Built-in        | Custom logger instance or `false` to disable               |
+| `unrefTimer`          | `boolean`                              | `false`         | Whether timers allow Node event loop to exit               |
 
 ---
 
 ## Troubleshooting
 
 ### 1. "Request timed out after 30000ms"
+
 - **Cause**: The service was spun down and cold-starting, taking longer than the configured timeout to boot and respond.
 - **Solution**: Increase the timeout setting to `60s` or `90s` (e.g. `--timeout 60s`).
 
 ### 2. "Request failed - HTTP 404 / 500"
+
 - **Cause**: The target health check URL path does not exist on your service or your server threw an unhandled error.
 - **Solution**: Verify the endpoint URL in your browser or curl (e.g. ensure `/health` or `/` returns a 200 OK status).
 
 ### 3. "My service still spun down despite keep-alive pings"
+
 - **Cause 1**: The interval might be too long (e.g., your provider spins down after 15 minutes, but your interval was 20m). Set interval to `10m` or `5m`.
 - **Cause 2**: You might have exhausted your monthly free-tier instance hours.
 - **Cause 3**: Ensure `service-keepalive` is running **externally**, not deployed within the sleeping instance itself.

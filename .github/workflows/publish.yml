@@ -1,0 +1,39 @@
+name: Publish Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # Required for npm provenance / Trusted Publishing
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Test Suite
+        run: npm test
+
+      - name: Build Package
+        run: npm run build
+
+      # Publishes using either npm provenance (Trusted Publishing) or fallback NPM_TOKEN secret
+      - name: Publish to npm registry
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

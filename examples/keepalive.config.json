@@ -1,0 +1,23 @@
+{
+  "defaults": {
+    "timeout": "30s",
+    "retries": 3,
+    "retryDelay": "5s",
+    "retryStrategy": "exponential"
+  },
+  "services": [
+    {
+      "name": "backend-api",
+      "url": "https://backend.example.onrender.com/health",
+      "interval": "10m"
+    },
+    {
+      "name": "auth-service",
+      "url": "https://auth.example.onrender.com/status",
+      "interval": "12m",
+      "headers": {
+        "User-Agent": "service-keepalive/custom"
+      }
+    }
+  ]
+}

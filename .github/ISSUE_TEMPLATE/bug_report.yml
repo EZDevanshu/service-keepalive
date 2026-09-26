@@ -1,0 +1,44 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in service-keepalive
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue! Please ensure you are running the latest version.
+  - type: input
+    id: version
+    attributes:
+      label: service-keepalive Version
+      placeholder: '1.0.0'
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      placeholder: 'v20.10.0'
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the bug
+      description: What happened? What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce / Code Example
+      description: Provide a minimal code snippet or CLI command that reproduces the issue.
+      placeholder: |
+        npx service-keepalive --url https://...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Please copy and paste any relevant terminal logs (ensure secrets/tokens are redacted).
+      render: shell

@@ -1,0 +1,11 @@
+.*
+tests/
+examples/
+coverage/
+src/
+tsup.config.ts
+tsconfig.json
+vitest.config.ts
+eslint.config.js
+Dockerfile
+.dockerignore

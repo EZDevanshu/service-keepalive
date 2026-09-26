@@ -1,0 +1,34 @@
+name: Service Keep-Alive
+
+# IMPORTANT CAVEAT:
+# GitHub Actions schedule cron runs on a best-effort basis. During high-demand
+# periods on GitHub infrastructure, scheduled jobs may experience delays or jitter.
+# For mission-critical zero-latency requirements, consider running as a daemon on
+# a VPS or container host.
+
+on:
+  schedule:
+    # Run every 10 minutes (cron format: minute hour day-of-month month day-of-week)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  ping:
+    name: Ping Deployed Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Ping Keep-Alive Target
+        env:
+          # Securely inject your target URL via GitHub Repository Secrets or Variables
+          TARGET_URL: ${{ secrets.KEEPALIVE_URL || vars.KEEPALIVE_URL }}
+        run: |
+          if [ -z "$TARGET_URL" ]; then
+            echo "Error: KEEPALIVE_URL secret/variable is not configured."
+            exit 1
+          fi
+          npx service-keepalive "$TARGET_URL" --timeout 30s --retries 3 --once
